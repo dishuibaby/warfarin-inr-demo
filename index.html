@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>华法林服药与 INR 监测记录</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero card">
+        <div>
+          <p class="eyebrow">个人健康记录 Demo</p>
+          <h1>华法林服药与 INR 监测记录</h1>
+          <p class="hero-copy">
+            用于集中查看每日服药和 INR 趋势，帮助复盘近期记录。
+          </p>
+        </div>
+        <div class="target-pill">目标 INR 1.8–2.5</div>
+      </section>
+
+      <section class="profile-grid">
+        <article class="card profile-card">
+          <h2>个人摘要</h2>
+          <dl>
+            <div>
+              <dt>用户名</dt>
+              <dd>小饼</dd>
+            </div>
+            <div>
+              <dt>服药</dt>
+              <dd>Marevan（华法林）</dd>
+            </div>
+            <div>
+              <dt>目标 INR</dt>
+              <dd>1.8–2.5</dd>
+            </div>
+            <div>
+              <dt>当前服药习惯</dt>
+              <dd>1.25 片 / 1.5 片交替，通常 08:00 服用</dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="card chart-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">INR Trend</p>
+              <h2>近期趋势</h2>
+            </div>
+            <span class="legend-dot"></span>
+          </div>
+          <div class="trend-chart" id="trendChart" aria-label="INR 趋势图"></div>
+        </article>
+      </section>
+
+      <section class="card table-card">
+        <div class="section-heading">
+          <h2>最近服药记录表</h2>
+          <p>示例记录，仅用于页面展示。</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>时间</th>
+                <th>剂量</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="medicationRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card table-card">
+        <div class="section-heading">
+          <h2>INR 监测记录表</h2>
+          <p>状态按目标范围 1.8–2.5 自动标记。</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>日期</th>
+                <th>INR</th>
+                <th>状态</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="inrRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <aside class="notice">
+        本页面是静态演示，不构成医疗建议。华法林剂量和 INR 管理请遵医嘱。
+      </aside>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
