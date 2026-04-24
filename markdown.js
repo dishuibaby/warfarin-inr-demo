@@ -53,7 +53,9 @@
       html.push('<table>');
       html.push(`<thead><tr>${header.map(cell => `<th>${inlineMarkdown(cell)}</th>`).join('')}</tr></thead>`);
       html.push('<tbody>');
-      for (const row of body) html.push(`<tr>${header.map((_, idx) => `<td>${inlineMarkdown(row[idx] || '')}</td>`).join('')}</tr>`);
+      for (const row of body) {
+        html.push(`<tr>${header.map((label, idx) => `<td data-label="${escapeHtml(label)}">${inlineMarkdown(row[idx] || '')}</td>`).join('')}</tr>`);
+      }
       html.push('</tbody></table>');
     };
 
@@ -134,23 +136,55 @@
   function renderMarkdownPage(markdown, sourcePath) {
     const parsed = markdownToHtml(markdown);
     const title = parsed.headings[0]?.text || titleFromPath(sourcePath);
+    const sections = [];
+    let current = null;
+    for (const heading of parsed.headings.filter(h => h.level <= 2)) {
+      if (heading.level === 1 && !current) {
+        current = { title: '总览', items: [] };
+        sections.push(current);
+      } else if (heading.level === 2) {
+        current = { title: heading.text, items: [] };
+        sections.push(current);
+      } else if (!current) {
+        current = { title: '总览', items: [] };
+        sections.push(current);
+      }
+      if (current) current.items.push(heading);
+    }
     document.title = `${title} · 文档预览`;
     const toc = parsed.headings.filter(h => h.level <= 3).slice(0, 24).map(h =>
-      `<a class="level${h.level}" href="#${cssEscape(h.id)}">${escapeHtml(h.text)}</a>`
+      `<a class="level${h.level}" href="#${escapeHtml(h.id)}">${escapeHtml(h.text)}</a>`
     ).join('');
+    const sectionCards = sections.slice(0, 8).map(section => `
+      <a class="mdSectionCard" href="#${escapeHtml(section.items[0]?.id || '')}">
+        <span>${escapeHtml(section.title)}</span>
+        <small>${section.items.length} 个小节</small>
+      </a>`).join('');
+    const hasToc = parsed.headings.length > 0;
     document.body.classList.add('markdown-preview-body');
     document.getElementById('app').innerHTML = `
       <main class="mdShell">
-        <aside class="mdToc">
-          <a class="mdBack" href="/">← 返回原型</a>
+        <section class="mdMobileHero">
+          <a class="mdBack" href="/">← 返回文档入口</a>
+          <p>文档预览</p>
+          <h1>${escapeHtml(title)}</h1>
+          <div class="mdQuickLinks">
+            ${hasToc ? '<button type="button" data-md-jump="toc">目录</button>' : ''}
+            <a href="${escapeHtml(sourcePath)}?raw=1">原文</a>
+          </div>
+          ${sectionCards ? `<div class="mdSectionGrid">${sectionCards}</div>` : ''}
+        </section>
+        <aside class="mdToc" id="doc-toc">
+          <a class="mdBack desktopOnly" href="/">← 返回文档入口</a>
           <strong>文档目录</strong>
           <nav>${toc || '<span>暂无标题</span>'}</nav>
         </aside>
         <article class="mdDoc">
-          <div class="mdMeta"><span>Markdown Preview</span><a href="${sourcePath}?raw=1">查看原始 Markdown</a></div>
+          <div class="mdMeta"><span>Markdown Preview</span><a href="${escapeHtml(sourcePath)}?raw=1">查看原始 Markdown</a></div>
           ${parsed.html}
         </article>
       </main>`;
+    document.querySelector('[data-md-jump="toc"]')?.addEventListener('click', () => document.getElementById('doc-toc')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
   }
 
   async function bootMarkdownPreview() {
