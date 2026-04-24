@@ -175,6 +175,13 @@ function landing() {
         ['数据库与缓存设计', '/docs/tech/database-and-cache-design/'],
         ['多端 MVP 计划', '/docs/plans/2026-04-24-multiplatform-mvp/']
       ]
+    },
+    {
+      title: '迭代报告与审计',
+      desc: '记录每轮大改的现有问题、改动原因、实际改动、验证结果和线上效果。',
+      links: [
+        ['2026-04-25 INR 产品完善与契约对齐报告', '/docs/reports/2026-04-25-inr-refinement-implementation/']
+      ]
     }
   ];
   const highlights = ['首页：最近 INR、下次检测、超明显提醒', '服药：完成后选择明日剂量，不做补服', 'INR：校正值主显示，原始值弱展示，双曲线趋势', '设置：检测方式、校正偏移、按天/周/月周期'];

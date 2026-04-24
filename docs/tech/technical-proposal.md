@@ -374,6 +374,16 @@ else:
 - 客户端本地提醒。
 - 小程序服务通知后续接入。
 
+### 6.9 本轮 MVP 收敛口径
+
+- `nextTestAt` 以最近一次 INR `tested_at` 为基准，加上用户设置的 `test_cycle_unit` 与 `test_cycle_interval`。
+- 检测方式偏移量保存为每条记录的 `offset_value` 快照；修改检测方式只影响新记录，不回写历史。
+- 首页、记录页、趋势图默认使用 `corrected_value` 做主展示和异常判断。
+- `raw_value` 只作为弱展示与双曲线参考值。
+- 完成服药时只记录当前操作时间 `operation_time`，不做补服流程。
+- 明日剂量通过 `next_day_dose_source=plan/manual` 与 `next_day_dose_tablets` 保存。
+- “多吃”暂不进入当前阶段。
+
 ## 7. 数据库设计草案
 
 ### 7.1 users
@@ -626,10 +636,12 @@ DELETE /api/v1/inr/methods/{id}
 
 ### 9.5 设置
 
+当前静态演示服务端 MVP 暂时收敛为单一设置接口：`GET /api/v1/settings` 与 `PUT /api/v1/settings`。以下分拆接口属于后续服务拆分规划，不作为当前可调用契约：
+
 ```text
-GET /api/v1/settings
 PUT /api/v1/settings/inr-target
 PUT /api/v1/settings/test-cycle
+PUT /api/v1/settings/default-test-method
 PUT /api/v1/settings/medication
 PUT /api/v1/settings/reminders
 ```

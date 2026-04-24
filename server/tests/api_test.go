@@ -80,7 +80,7 @@ func TestINRRecordsGetAndPost(t *testing.T) {
 	decode(t, created.Body.Bytes(), &createdEnvelope)
 	var record map[string]interface{}
 	decode(t, createdEnvelope.Data, &record)
-	if record["correctedValue"].(float64) != 2.2 || record["abnormalTier"] != "normal" || record["trend"] != "in_range" {
+	if record["correctedValue"].(float64) != 2.2 || record["offsetValue"].(float64) != 0.1 || record["abnormalTier"] != "normal" || record["trend"] != "in_range" {
 		t.Fatalf("unexpected INR record: %#v", record)
 	}
 
@@ -117,12 +117,19 @@ func TestINRRecordsGetAndPost(t *testing.T) {
 	var listEnvelope envelope
 	decode(t, listed.Body.Bytes(), &listEnvelope)
 	var recordsResponse struct {
-		Records []map[string]interface{} `json:"records"`
-		Trend   []map[string]interface{} `json:"trend"`
+		Records     []map[string]interface{} `json:"records"`
+		Trend       []map[string]interface{} `json:"trend"`
+		TargetRange map[string]interface{}   `json:"targetRange"`
 	}
 	decode(t, listEnvelope.Data, &recordsResponse)
 	if len(recordsResponse.Records) != 3 || recordsResponse.Records[0]["id"] == "" || len(recordsResponse.Trend) != 3 {
 		t.Fatalf("expected three persisted INR records and trend points, got %#v", recordsResponse)
+	}
+	if recordsResponse.TargetRange["min"].(float64) != 1.8 || recordsResponse.TargetRange["max"].(float64) != 2.5 {
+		t.Fatalf("target range missing from INR response: %#v", recordsResponse.TargetRange)
+	}
+	if recordsResponse.Records[2]["offsetValue"].(float64) != 0.1 || recordsResponse.Trend[0]["rawValue"].(float64) != 2.1 || recordsResponse.Trend[0]["correctedValue"].(float64) != 2.2 {
+		t.Fatalf("INR response should expose raw/corrected/offset contract fields: %#v", recordsResponse)
 	}
 }
 

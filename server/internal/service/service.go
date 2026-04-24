@@ -22,7 +22,11 @@ func (s *Service) HomeSummary() model.HomeSummary {
 	settings := s.repo.GetSettings()
 	latestINR := s.repo.LatestINR()
 	today := s.now()
-	nextTestAt := nextTestTime(today, settings.TestCycle)
+	nextTestBase := today
+	if latestINR != nil {
+		nextTestBase = latestINR.TestedAt
+	}
+	nextTestAt := nextTestTime(nextTestBase, settings.TestCycle)
 	reminder := model.Reminder{Level: "strong", Title: "今日服药待确认", Body: "请按医嘱完成服药记录，本应用不提供剂量调整建议。"}
 	todayMedication := model.TodayMedication{Status: "pending", PlannedDoseTablets: 0}
 
@@ -84,7 +88,8 @@ func (s *Service) CreateINR(req model.CreateINRRecordRequest) (model.INRRecord, 
 	}
 	correctedValue := roundINR(req.RawValue + offset)
 	record := model.INRRecord{
-		RawValue:       req.RawValue,
+		RawValue:       roundINR(req.RawValue),
+		OffsetValue:    roundINR(offset),
 		CorrectedValue: correctedValue,
 		Trend:          inrTrend(correctedValue, settings),
 		AbnormalTier:   abnormalTier(correctedValue, settings),

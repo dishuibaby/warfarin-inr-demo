@@ -48,6 +48,13 @@ func TestCreateINRUsesDefaultOffsetAndClassifiesAllTiers(t *testing.T) {
 			if record.CorrectedValue != tc.wantCorrected || record.Trend != tc.wantTrend || record.AbnormalTier != tc.wantTier {
 				t.Fatalf("unexpected INR classification: got corrected=%v trend=%s tier=%s", record.CorrectedValue, record.Trend, record.AbnormalTier)
 			}
+			wantOffset := 0.2
+			if tc.offset != nil {
+				wantOffset = *tc.offset
+			}
+			if record.OffsetValue != wantOffset {
+				t.Fatalf("record should preserve applied offset: got %v want %v", record.OffsetValue, wantOffset)
+			}
 		})
 	}
 }
@@ -115,7 +122,7 @@ func TestHomeSummaryIncludesLatestINRNextTestAndProminentReminder(t *testing.T) 
 	if summary.LatestINR == nil || summary.LatestINR.CorrectedValue != 2.7 || summary.LatestINR.AbnormalTier != "strong_high" {
 		t.Fatalf("summary should include latest corrected INR: %#v", summary.LatestINR)
 	}
-	if !summary.NextTestAt.Equal(mustParseTime(t, "2026-04-27T08:00:00Z")) {
+	if !summary.NextTestAt.Equal(mustParseTime(t, "2026-04-26T08:00:00Z")) {
 		t.Fatalf("unexpected next test time: %s", summary.NextTestAt.Format(time.RFC3339))
 	}
 	if summary.ProminentReminder.Level != "strong" || summary.ProminentReminder.Title != "INR 结果需关注" {

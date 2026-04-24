@@ -45,6 +45,7 @@ type CreateMedicationRecordRequest struct {
 type INRRecord struct {
 	ID             string    `json:"id"`
 	RawValue       float64   `json:"rawValue"`
+	OffsetValue    float64   `json:"offsetValue"`
 	CorrectedValue float64   `json:"correctedValue"`
 	Trend          string    `json:"trend"`
 	AbnormalTier   string    `json:"abnormalTier"`

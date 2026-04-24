@@ -157,9 +157,43 @@ components:
           required: [data]
           properties:
             data:
-              type: array
-              items:
-                $ref: '#/components/schemas/INRRecord'
+              $ref: '#/components/schemas/INRRecordsResponse'
+    INRRecordsResponse:
+      type: object
+      required: [records, trend, targetRange]
+      properties:
+        records:
+          type: array
+          items:
+            $ref: '#/components/schemas/INRRecord'
+        trend:
+          type: array
+          description: Chronological points for the raw/corrected dual-line trend chart.
+          items:
+            $ref: '#/components/schemas/INRTrendPoint'
+        targetRange:
+          $ref: '#/components/schemas/TargetRange'
+    INRTrendPoint:
+      type: object
+      required: [date, rawValue, correctedValue]
+      properties:
+        date:
+          type: string
+          example: '04/23'
+        rawValue:
+          type: number
+        correctedValue:
+          type: number
+    TargetRange:
+      type: object
+      required: [min, max]
+      properties:
+        min:
+          type: number
+          example: 1.8
+        max:
+          type: number
+          example: 2.5
     UserSettingsEnvelope:
       allOf:
         - $ref: '#/components/schemas/BaseEnvelope'
@@ -260,13 +294,16 @@ components:
           format: date-time
     INRRecord:
       type: object
-      required: [id, rawValue, correctedValue, trend, abnormalTier, testMethod, testedAt]
+      required: [id, rawValue, offsetValue, correctedValue, trend, abnormalTier, testMethod, testedAt]
       properties:
         id:
           type: string
           example: inr-1
         rawValue:
           type: number
+        offsetValue:
+          type: number
+          description: Applied correction offset snapshot. It is preserved per record so historical INR values do not change when settings change.
         correctedValue:
           type: number
           description: rawValue plus either request offset or settings.inrOffset.

@@ -28,6 +28,7 @@ CREATE INDEX IF NOT EXISTS idx_medications_recorded_at ON medications(recorded_a
 CREATE TABLE IF NOT EXISTS inr_records (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     raw_value REAL NOT NULL,
+    offset_value REAL NOT NULL DEFAULT 0,
     corrected_value REAL NOT NULL,
     trend TEXT NOT NULL DEFAULT 'in_range',
     abnormal_tier TEXT NOT NULL,
@@ -88,7 +89,38 @@ func (r *Repository) Close() error {
 }
 
 func (r *Repository) Migrate() error {
-	_, err := r.db.Exec(schema)
+	if _, err := r.db.Exec(schema); err != nil {
+		return err
+	}
+	return r.ensureColumn("inr_records", "offset_value", "ALTER TABLE inr_records ADD COLUMN offset_value REAL NOT NULL DEFAULT 0")
+}
+
+func (r *Repository) ensureColumn(table string, column string, statement string) error {
+	rows, err := r.db.Query(fmt.Sprintf("PRAGMA table_info(%s)", table))
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var (
+			cid        int
+			name       string
+			columnType string
+			notNull    int
+			defaultVal sql.NullString
+			pk         int
+		)
+		if err := rows.Scan(&cid, &name, &columnType, &notNull, &defaultVal, &pk); err != nil {
+			return err
+		}
+		if name == column {
+			return nil
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return err
+	}
+	_, err = r.db.Exec(statement)
 	return err
 }
 
@@ -132,9 +164,9 @@ func (r *Repository) LatestMedicationOn(day time.Time) *model.MedicationRecord {
 
 func (r *Repository) CreateINR(record model.INRRecord) model.INRRecord {
 	result, err := r.db.Exec(`
-		INSERT INTO inr_records (raw_value, corrected_value, trend, abnormal_tier, test_method, tested_at)
-		VALUES (?, ?, ?, ?, ?, ?)
-	`, record.RawValue, record.CorrectedValue, record.Trend, record.AbnormalTier, record.TestMethod, formatTime(record.TestedAt))
+		INSERT INTO inr_records (raw_value, offset_value, corrected_value, trend, abnormal_tier, test_method, tested_at)
+		VALUES (?, ?, ?, ?, ?, ?, ?)
+	`, record.RawValue, record.OffsetValue, record.CorrectedValue, record.Trend, record.AbnormalTier, record.TestMethod, formatTime(record.TestedAt))
 	if err != nil {
 		panic(err)
 	}
@@ -148,7 +180,7 @@ func (r *Repository) CreateINR(record model.INRRecord) model.INRRecord {
 
 func (r *Repository) ListINR() []model.INRRecord {
 	rows, err := r.db.Query(`
-		SELECT id, raw_value, corrected_value, trend, abnormal_tier, test_method, tested_at
+		SELECT id, raw_value, offset_value, corrected_value, trend, abnormal_tier, test_method, tested_at
 		FROM inr_records
 		ORDER BY tested_at DESC, id DESC
 	`)
@@ -168,7 +200,7 @@ func (r *Repository) ListINR() []model.INRRecord {
 
 func (r *Repository) LatestINR() *model.INRRecord {
 	row := r.db.QueryRow(`
-		SELECT id, raw_value, corrected_value, trend, abnormal_tier, test_method, tested_at
+		SELECT id, raw_value, offset_value, corrected_value, trend, abnormal_tier, test_method, tested_at
 		FROM inr_records
 		ORDER BY tested_at DESC, id DESC
 		LIMIT 1
@@ -252,7 +284,7 @@ func scanINRRow(row scanner) (model.INRRecord, error) {
 	var id int64
 	var testedAt string
 	var record model.INRRecord
-	if err := row.Scan(&id, &record.RawValue, &record.CorrectedValue, &record.Trend, &record.AbnormalTier, &record.TestMethod, &testedAt); err != nil {
+	if err := row.Scan(&id, &record.RawValue, &record.OffsetValue, &record.CorrectedValue, &record.Trend, &record.AbnormalTier, &record.TestMethod, &testedAt); err != nil {
 		return model.INRRecord{}, err
 	}
 	record.ID = fmt.Sprintf("inr-%d", id)
