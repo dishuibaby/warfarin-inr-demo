@@ -149,9 +149,16 @@ function landing() {
   return `<main class="landing"><section class="hero"><div><p class="eyebrow">Warfarin INR Tracker</p><h1>抗凝小助手</h1><p class="lead">记录每日服药、INR 检测、提醒设置和长期趋势，帮助持续管理华法林抗凝治疗。</p></div><span class="chip">目标 INR 1.8–2.5</span></section><section class="platform-grid">${Object.entries(platforms).map(([k, p]) => `<article class="platform-card"><h2>${p.label}</h2><p>${k === 'wechat' ? '微信快捷登录，适合日常快速记录。' : '适合手机端长期记录和提醒。'}</p><div class="route-links">${routes.map(id => `<a href="/${k}/${id}/">${routeMap[id]}<span>›</span></a>`).join('')}</div></article>`).join('')}</section></main>`;
 }
 function render() {
-  const parts = pathParts(); const platform = platformOf(parts); const page = pageOf(parts);
-  const pages = { home, records, inr, me, login, 'inr-settings': inrSettings, 'inr-methods': inrMethods, 'test-settings': testSettings, 'dose-settings': doseSettings, 'after-dose-rule': afterDoseRule, notifications, account, profile, help };
-  const html = !parts.length ? landing() : (pages[page] ? pages[page](platform) : landing());
-  document.getElementById('app').innerHTML = html;
+  const doRender = () => {
+    const parts = pathParts(); const platform = platformOf(parts); const page = pageOf(parts);
+    const pages = { home, records, inr, me, login, 'inr-settings': inrSettings, 'inr-methods': inrMethods, 'test-settings': testSettings, 'dose-settings': doseSettings, 'after-dose-rule': afterDoseRule, notifications, account, profile, help };
+    const html = !parts.length ? landing() : (pages[page] ? pages[page](platform) : landing());
+    document.getElementById('app').innerHTML = html;
+  };
+  if (window.HermesMarkdownPreview && (document.getElementById('md-source') || (/\.md$/i.test(location.pathname) && !/[?&]raw=1\b/.test(location.search)))) {
+    window.HermesMarkdownPreview.boot().then((handled) => { if (!handled) doRender(); });
+    return;
+  }
+  doRender();
 }
 render();
