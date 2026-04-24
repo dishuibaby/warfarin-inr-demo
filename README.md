@@ -8,6 +8,7 @@
 
 - UI 设计说明：[`docs/ui/README.md`](docs/ui/README.md)
 - 技术方案：[`docs/tech/technical-proposal.md`](docs/tech/technical-proposal.md)
+- 基础数据与数据结构审核清单：[`docs/tech/base-data-and-schema-review.md`](docs/tech/base-data-and-schema-review.md)
 
 当前约定：
 

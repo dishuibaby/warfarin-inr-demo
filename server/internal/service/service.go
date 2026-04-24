@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"math"
 	"time"
 
 	"warfarin-inr-demo/server/internal/model"
@@ -81,7 +82,7 @@ func (s *Service) CreateINR(req model.CreateINRRecordRequest) (model.INRRecord, 
 	if req.Offset != nil {
 		offset = *req.Offset
 	}
-	correctedValue := req.RawValue + offset
+	correctedValue := roundINR(req.RawValue + offset)
 	record := model.INRRecord{
 		RawValue:       req.RawValue,
 		CorrectedValue: correctedValue,
@@ -117,6 +118,10 @@ func parseRequiredTime(value string) (time.Time, error) {
 		return time.Time{}, errors.New("time must be RFC3339")
 	}
 	return parsed, nil
+}
+
+func roundINR(value float64) float64 {
+	return math.Round(value*100) / 100
 }
 
 func abnormalTier(value float64, settings model.UserSettings) string {

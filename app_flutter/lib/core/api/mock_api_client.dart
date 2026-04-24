@@ -47,11 +47,12 @@ class MockApiClient implements ApiClient {
 
   @override
   Future<InrRecord> createInrRecord(CreateInrRecordRequest request) async {
-    final correctedValue = request.rawValue + (request.offset ?? 0);
+    final correctedValue = _roundInr(request.rawValue + (request.offset ?? 0));
     final record = InrRecord(
       id: 'local-inr-${DateTime.now().millisecondsSinceEpoch}',
       rawValue: request.rawValue,
       correctedValue: correctedValue,
+      trend: _trendFor(correctedValue),
       abnormalTier: _tierFor(correctedValue),
       testMethod: request.testMethod,
       testedAt: request.testedAt,
@@ -76,9 +77,9 @@ class MockApiClient implements ApiClient {
   static List<InrRecord> _seedInrRecords() {
     final now = DateTime.now();
     return [
-      InrRecord(id: 'demo-3', rawValue: 2.2, correctedValue: 2.2, abnormalTier: AbnormalTier.normal, testMethod: TestMethod.hospitalLab, testedAt: now.subtract(const Duration(days: 1))),
-      InrRecord(id: 'demo-2', rawValue: 1.7, correctedValue: 1.8, abnormalTier: AbnormalTier.normal, testMethod: TestMethod.poctDevice, testedAt: now.subtract(const Duration(days: 8))),
-      InrRecord(id: 'demo-1', rawValue: 2.8, correctedValue: 2.7, abnormalTier: AbnormalTier.strongHigh, testMethod: TestMethod.homeDevice, testedAt: now.subtract(const Duration(days: 15))),
+      InrRecord(id: 'demo-3', rawValue: 2.2, correctedValue: 2.2, trend: InrTrend.inRange, abnormalTier: AbnormalTier.normal, testMethod: TestMethod.hospitalLab, testedAt: now.subtract(const Duration(days: 1))),
+      InrRecord(id: 'demo-2', rawValue: 1.7, correctedValue: 1.8, trend: InrTrend.inRange, abnormalTier: AbnormalTier.normal, testMethod: TestMethod.poctDevice, testedAt: now.subtract(const Duration(days: 8))),
+      InrRecord(id: 'demo-1', rawValue: 2.8, correctedValue: 2.7, trend: InrTrend.high, abnormalTier: AbnormalTier.strongHigh, testMethod: TestMethod.homeDevice, testedAt: now.subtract(const Duration(days: 15))),
     ];
   }
 
@@ -89,4 +90,12 @@ class MockApiClient implements ApiClient {
     if (value > 2.5) return AbnormalTier.weakHigh;
     return AbnormalTier.normal;
   }
+
+  static InrTrend _trendFor(double value) {
+    if (value < 1.8) return InrTrend.low;
+    if (value > 2.5) return InrTrend.high;
+    return InrTrend.inRange;
+  }
+
+  static double _roundInr(double value) => (value * 100).round() / 100;
 }

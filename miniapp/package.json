@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "test": "tsc --noEmit"
+    "test": "tsc --noEmit && tsc --project tsconfig.tests.json && node dist-tests/tests/inr.test.js"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
