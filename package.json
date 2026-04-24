@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "test:md-preview": "playwright test markdown-preview.spec.cjs --reporter=line"
+    "build": "python3 build-dist.py",
+    "test:md-preview": "playwright test markdown-preview.spec.cjs --reporter=line",
+    "test:product": "playwright test product-refinement.spec.cjs --reporter=line"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0"
