@@ -1,0 +1,27 @@
+<view class="page">
+  <view class="card">
+    <view class="label">INR 双曲线数据</view>
+    <view class="target">{{targetText}}</view>
+    <view class="legend"><text class="raw-dot"></text>原始 INR <text class="corrected-dot"></text>校正后 INR</view>
+    <view class="curve-list">
+      <view class="curve-row" wx:for="{{correctedCurve}}" wx:key="date">
+        <text>{{item.date}}</text>
+        <text>校正 {{item.value}}</text>
+      </view>
+      <view class="curve-row weak" wx:for="{{rawCurve}}" wx:key="date">
+        <text>{{item.date}}</text>
+        <text>原始 {{item.value}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="prompt-card">{{latestPrompt}}</view>
+
+  <view class="card">
+    <view class="label">最近记录</view>
+    <view class="record" wx:for="{{records}}" wx:key="id">
+      <view>{{item.testedAt}}</view>
+      <view>校正 {{item.correctedInr}} / 原始 {{item.rawInr}}</view>
+    </view>
+  </view>
+</view>

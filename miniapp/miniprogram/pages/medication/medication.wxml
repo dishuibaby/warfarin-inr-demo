@@ -1,0 +1,15 @@
+<view class="page">
+  <view class="card status-card">
+    <view class="label">今日服药状态</view>
+    <view class="status">{{completedToday ? '已完成' : '待记录'}}</view>
+    <view class="operation-time">系统操作时间：{{lastOperationTime}}</view>
+  </view>
+
+  <button class="primary-button" bindtap="onCompleteMedication">完成今日服药</button>
+
+  <view class="card">
+    <view class="label">明日剂量模式</view>
+    <view class="value">{{tomorrowDoseText}}</view>
+    <view class="note">仅记录用户选择和系统操作时间，不包含补服或剂量建议。</view>
+  </view>
+</view>

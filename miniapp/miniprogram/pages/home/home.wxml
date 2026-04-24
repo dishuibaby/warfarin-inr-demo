@@ -1,0 +1,23 @@
+<view class="page home-page">
+  <view class="hero-card">
+    <view class="eyebrow">最近校正后 INR</view>
+    <view class="corrected-inr">{{summary.latestCorrectedDisplay}}</view>
+    <view class="raw-inr">{{summary.latestRawDisplay}}</view>
+    <view class="tier-prompt">{{summary.inrPrompt}}</view>
+  </view>
+
+  <view class="must-reminder">
+    <view class="reminder-label">必须提醒</view>
+    <view class="reminder-text">{{summary.mustHaveReminder}}</view>
+  </view>
+
+  <view class="info-card">
+    <view class="info-label">下次检测时间</view>
+    <view class="info-value">{{summary.nextTestAt}}</view>
+  </view>
+
+  <view class="info-card subtle">
+    <view class="info-label">今日服药</view>
+    <view class="info-value">{{summary.medicationCompletedToday ? '已完成记录' : '待完成记录'}}</view>
+  </view>
+</view>

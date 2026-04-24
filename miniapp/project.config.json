@@ -1,0 +1,14 @@
+{
+  "appid": "touristappid",
+  "compileType": "miniprogram",
+  "libVersion": "3.7.9",
+  "projectname": "warfarin-inr-demo-miniapp",
+  "miniprogramRoot": "miniprogram/",
+  "setting": {
+    "es6": true,
+    "minified": true,
+    "postcss": true,
+    "enhance": true
+  },
+  "condition": {}
+}
