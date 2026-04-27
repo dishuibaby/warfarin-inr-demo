@@ -3,7 +3,7 @@ package repository
 import (
 	"time"
 
-	"warfarin-inr-demo/server/internal/model"
+	"inr_helper/server/internal/model"
 )
 
 type Repository interface {

@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"warfarin-inr-demo/server/internal/model"
+	"inr_helper/server/internal/model"
 )
 
 func homeSummaryDisplayText(settings model.UserSettings, todayMedication model.TodayMedication) model.HomeSummaryDisplayText {

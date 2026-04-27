@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"warfarin-inr-demo/server/internal/model"
-	"warfarin-inr-demo/server/internal/repository/memory"
+	"inr_helper/server/internal/model"
+	"inr_helper/server/internal/repository/memory"
 )
 
 func TestCreateINRUsesDefaultOffsetAndClassifiesAllTiers(t *testing.T) {

@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"warfarin-inr-demo/server/internal/config"
-	"warfarin-inr-demo/server/internal/handler"
-	"warfarin-inr-demo/server/internal/repository"
-	"warfarin-inr-demo/server/internal/repository/memory"
-	sqliterepo "warfarin-inr-demo/server/internal/repository/sqlite"
-	"warfarin-inr-demo/server/internal/service"
+	"inr_helper/server/internal/config"
+	"inr_helper/server/internal/handler"
+	"inr_helper/server/internal/repository"
+	"inr_helper/server/internal/repository/memory"
+	sqliterepo "inr_helper/server/internal/repository/sqlite"
+	"inr_helper/server/internal/service"
 )
 
 func New() *gin.Engine {

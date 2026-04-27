@@ -1,6 +1,6 @@
 package main
 
-import "warfarin-inr-demo/server/internal/router"
+import "inr_helper/server/internal/router"
 
 func main() {
 	r := router.New()

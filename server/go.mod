@@ -1,4 +1,4 @@
-module warfarin-inr-demo/server
+module inr_helper/server
 
 go 1.19
 

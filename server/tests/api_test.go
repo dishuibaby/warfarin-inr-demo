@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"warfarin-inr-demo/server/internal/router"
+	"inr_helper/server/internal/router"
 )
 
 type envelope struct {

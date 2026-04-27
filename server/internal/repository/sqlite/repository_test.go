@@ -8,7 +8,7 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"warfarin-inr-demo/server/internal/model"
+	"inr_helper/server/internal/model"
 )
 
 func TestRepositoryPersistsINRAndSettings(t *testing.T) {

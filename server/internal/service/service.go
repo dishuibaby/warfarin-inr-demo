@@ -5,8 +5,8 @@ import (
 	"math"
 	"time"
 
-	"warfarin-inr-demo/server/internal/model"
-	"warfarin-inr-demo/server/internal/repository"
+	"inr_helper/server/internal/model"
+	"inr_helper/server/internal/repository"
 )
 
 type Service struct {

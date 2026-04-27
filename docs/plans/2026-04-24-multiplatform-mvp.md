@@ -27,22 +27,22 @@
 ## 并行开发模块拆分
 
 ### Module A: Flutter Android/iOS 客户端
-- Branch/worktree: `feat/flutter-mvp` / `/tmp/warfarin-inr-demo-flutter`
+- Branch/worktree: `feat/flutter-mvp` / `/tmp/inr_helper-flutter`
 - Scope: `app_flutter/`，包含 Clean Architecture 风格目录、API client、domain models、Riverpod 状态层、首页/服药/INR/设置页面骨架与 widget/unit tests。
 - Verification: `flutter test`/`flutter analyze`（SDK 可用时）；无 SDK 时执行源码结构检查并记录限制。
 
 ### Module B: 服务端 SQLite 持久化与迁移入口
-- Branch/worktree: `feat/server-sqlite-adapter` / `/tmp/warfarin-inr-demo-server-sqlite`
+- Branch/worktree: `feat/server-sqlite-adapter` / `/tmp/inr_helper-server-sqlite`
 - Scope: `server/internal/repository/sqlite/`、迁移脚本、`DB_ENGINE=sqlite`、配置文档；保持 `memory` 默认不破坏现有测试。✅
 - Verification: `GOMODCACHE=/tmp/go/pkg/mod GOCACHE=/tmp/go-build go test ./...`，新增 SQLite repository 测试。✅
 
 ### Module C: API 契约、共享类型与 CI
-- Branch/worktree: `feat/contracts-ci` / `/tmp/warfarin-inr-demo-contracts-ci`
+- Branch/worktree: `feat/contracts-ci` / `/tmp/inr_helper-contracts-ci`
 - Scope: OpenAPI 与服务端/小程序/Flutter 模型对齐，GitHub Actions 运行服务端、小程序、产品和文档验证。
 - Verification: 本地执行合同/类型检查；推送后观察 GitHub Actions。
 
 ### Module D: 小程序体验补齐与联调准备
-- Branch/worktree: `feat/miniapp-integration-polish` / `/tmp/warfarin-inr-demo-miniapp`
+- Branch/worktree: `feat/miniapp-integration-polish` / `/tmp/inr_helper-miniapp`
 - Scope: 小程序端错误态、加载态、API base 配置、首页强提醒/INR 双曲线/设置/明日剂量交互补齐，保留低耦合 request 层。
 - Verification: `cd miniapp && npm test`。
 

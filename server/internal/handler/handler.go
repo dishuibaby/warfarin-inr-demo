@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"warfarin-inr-demo/server/internal/model"
-	"warfarin-inr-demo/server/internal/service"
+	"inr_helper/server/internal/model"
+	"inr_helper/server/internal/service"
 )
 
 type Handler struct {

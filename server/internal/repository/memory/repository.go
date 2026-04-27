@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"warfarin-inr-demo/server/internal/model"
+	"inr_helper/server/internal/model"
 )
 
 type Repository struct {

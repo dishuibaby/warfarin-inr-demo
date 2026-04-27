@@ -51,7 +51,7 @@ Go Gin API Server
 当前仓库是静态 UI 原型。正式开发可逐步演进为 monorepo：
 
 ```text
-warfarin-inr-demo/
+inr_helper/
 ├── docs/
 │   ├── ui/                         # UI 设计、原型说明
 │   └── tech/                       # 技术方案、接口、数据模型
