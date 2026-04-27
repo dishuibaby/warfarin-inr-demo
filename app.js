@@ -226,7 +226,7 @@ function showDoseDialog() { openModal('doseDoneSheet', true); }
 function showInrDialog(platform) { location.href = `/${platform}/inr/`; }
 
 function landing() {
-  const routes = ['home', 'records', 'inr', 'me', 'login', 'inr-settings', 'dose-settings', 'notifications', 'account', 'profile', 'help'];
+  const routes = ['home', 'records', 'inr', 'me', 'login', 'inr-settings', 'inr-methods', 'test-settings', 'dose-settings', 'after-dose-rule', 'notifications', 'account', 'profile', 'help'];
   const docGroups = [
     {
       title: '需求与功能清单',
@@ -262,7 +262,8 @@ function landing() {
       desc: '记录每轮大改的现有问题、改动原因、实际改动、验证结果和线上效果。',
       links: [
         ['2026-04-25 INR 产品完善与契约对齐报告', '/docs/reports/2026-04-25-inr-refinement-implementation/'],
-        ['2026-04-25 服务端文案契约与多语言准备报告', '/docs/reports/2026-04-25-server-copy-contract/']
+        ['2026-04-25 服务端文案契约与多语言准备报告', '/docs/reports/2026-04-25-server-copy-contract/'],
+        ['2026-04-27 项目边界与独立运行报告', '/docs/reports/2026-04-27-project-boundary-independent-run/']
       ]
     }
   ];

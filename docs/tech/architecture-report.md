@@ -189,6 +189,20 @@ API Server（单实例或容器）
 | 小程序服务通知未接入 | 微信提醒还不能真正触达 | 完成小程序模板消息配置后实现 |
 | 鉴权仍是 MVP | 不能开放真实公网 API | 接入微信登录/session 后再放开真实数据 |
 
-## 10. 架构结论
+
+## 10. 独立运行与目录边界
+
+| 目录/入口 | 独立职责 | 运行边界 |
+|---|---|---|
+| 根目录静态站 | 文档入口、Markdown 预览、三端 UI 原型 | 通过 `npm run build` 生成 `dist/` 并部署到 Cloudflare；不承载真实业务数据 |
+| `miniapp/` | 微信小程序工程 | 通过 `cd miniapp && npm test` 验证；与 `/wechat/...` 静态预览路由不是同一运行时 |
+| `wechat/`、`android/`、`ios/` | 静态深链预览目录 | 由根目录 `index.html` 复制入口，用于产品/视觉验收 |
+| `app_flutter/` | Flutter Android/iOS App | 通过 `ApiClient` 访问服务端；可用 mock API 独立预览，真实 API 通过 `API_BASE_URL` 配置 |
+| `server/` | Go/Gin JSON API | 独立 Go module，从 `server/` 目录运行；不依赖前端静态资源 |
+| `packages/api-contract/` | 跨端 OpenAPI 契约 | 共享字段语义，不共享端侧运行时代码 |
+
+详细盘点见 `docs/reports/2026-04-27-project-boundary-independent-run.md`。
+
+## 11. 架构结论
 
 当前最合适的路线是：**Cloudflare 展示文档和原型，Go 单体承载业务规则，SQLite 先跑通 MVP，随后平滑切 MySQL + Redis**。这样既能快速迭代，又不会把核心业务规则散落在多个端里。

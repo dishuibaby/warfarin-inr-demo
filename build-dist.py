@@ -4,15 +4,14 @@ import shutil
 
 root = Path(__file__).resolve().parent
 public_files = ['index.html', 'app.js', 'styles.css', 'markdown.js']
-route_dirs = [
-    'wechat/home', 'wechat/records', 'wechat/inr', 'wechat/me', 'wechat/login',
-    'wechat/inr-settings', 'wechat/dose-settings', 'wechat/notifications', 'wechat/account', 'wechat/profile', 'wechat/help',
-    'wechat/inr-methods', 'wechat/test-settings', 'wechat/after-dose-rule',
-    'android/home', 'android/records', 'android/inr', 'android/me', 'android/login',
-    'android/inr-settings', 'android/dose-settings', 'android/notifications', 'android/account', 'android/profile', 'android/help',
-    'ios/home', 'ios/records', 'ios/inr', 'ios/me', 'ios/login',
-    'ios/inr-settings', 'ios/dose-settings', 'ios/notifications', 'ios/account', 'ios/profile', 'ios/help',
+platforms = ['wechat', 'android', 'ios']
+routes = [
+    'home', 'records', 'inr', 'me', 'login',
+    'inr-settings', 'inr-methods', 'test-settings',
+    'dose-settings', 'after-dose-rule',
+    'notifications', 'account', 'profile', 'help',
 ]
+route_dirs = [f'{platform}/{route}' for platform in platforms for route in routes]
 markdown_docs = [
     'README.md',
     'docs/ui/README.md',
@@ -25,6 +24,7 @@ markdown_docs = [
     'docs/plans/2026-04-24-multiplatform-mvp.md',
     'docs/reports/2026-04-25-inr-refinement-implementation.md',
     'docs/reports/2026-04-25-server-copy-contract.md',
+    'docs/reports/2026-04-27-project-boundary-independent-run.md',
 ]
 
 index = (root / 'index.html').read_text(encoding='utf-8')
@@ -37,6 +37,10 @@ for name in public_files:
     src = root / name
     if src.exists():
         shutil.copy2(src, dist / name)
+
+missing_routes = [route for route in route_dirs if not (root / route / 'index.html').exists()]
+if missing_routes:
+    raise SystemExit(f'Missing route index.html files: {missing_routes}')
 
 for route in route_dirs:
     target = dist / route
